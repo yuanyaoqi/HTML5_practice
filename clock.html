@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #theCanvas{
+            background-color: #57baac;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="theCanvas" width="600" height="600"></canvas>
+<script type="text/javascript">
+    var theCanvas=document.getElementById("theCanvas").getContext("2d");
+    window.onload=function () {
+        setInterval(drawClock,100);
+    }
+    //闹铃值
+    var ringDeg=[0,1,2,3,2,1,0,-1,-2,-3,-2,-1];
+    var ringValue=0;
+    function drawClock() {
+        clearClock();
+        //支脚
+        theCanvas.lineWidth=14;
+        theCanvas.lineCap="round";
+        theCanvas.strokeStyle="#777677";
+        theCanvas.beginPath();
+        theCanvas.moveTo(245,433);
+        theCanvas.lineTo(230,455);
+        theCanvas.stroke();
+        theCanvas.beginPath();
+        theCanvas.moveTo(355,433);
+        theCanvas.lineTo(370,455);
+        theCanvas.stroke();
+        //把手
+        theCanvas.lineWidth=8;
+        theCanvas.beginPath();
+        theCanvas.arc(300,150,80,0,360*Math.PI/180,false);
+        theCanvas.stroke();
+        //铃
+        theCanvas.fillStyle="#eb6d4e";
+        theCanvas.lineWidth=1;
+        theCanvas.strokeStyle="#eb6d4e";
+        theCanvas.save();
+        theCanvas.beginPath();
+        theCanvas.translate(180,185);
+        theCanvas.rotate(-30*Math.PI/180);
+        theCanvas.moveTo(0,0);
+        theCanvas.lineTo(0,-50);
+        theCanvas.lineTo(90,-50);
+        theCanvas.lineTo(90,0);
+        theCanvas.closePath();
+        theCanvas.fill();
+        theCanvas.stroke();
+        theCanvas.restore();
+        //铃
+        theCanvas.save();
+        theCanvas.beginPath();
+        theCanvas.translate(340,140);
+        theCanvas.rotate(30*Math.PI/180);
+        theCanvas.moveTo(0,0);
+        theCanvas.lineTo(0,-50);
+        theCanvas.lineTo(90,-50);
+        theCanvas.lineTo(90,0);
+        theCanvas.closePath();
+        theCanvas.fill();
+        theCanvas.stroke();
+        theCanvas.restore();
+        //闹铃
+        var j=ringValue%12;
+        drawRing(ringDeg[j]);
+        ringValue++;
+        //表盘
+        theCanvas.beginPath();
+        theCanvas.fillStyle="white";
+        theCanvas.lineWidth=25;
+        theCanvas.strokeStyle="#eb6d4e";
+        theCanvas.arc(300,300,130,0,360*Math.PI/180,false);
+        theCanvas.stroke();
+        theCanvas.fill();
+        //刻度
+        for(var i=0;i<60;i++){
+            theCanvas.save();
+            theCanvas.beginPath();
+            theCanvas.translate(300,300);
+            theCanvas.rotate(i*6*Math.PI/180);
+            if(i%5==0){
+                theCanvas.lineWidth=5;
+                theCanvas.strokeStyle="#777677";
+                theCanvas.moveTo(0,115);
+                theCanvas.lineTo(0,130);
+            }else{
+                theCanvas.lineWidth=2;
+                theCanvas.strokeStyle="#777677";
+                theCanvas.moveTo(0,124);
+                theCanvas.lineTo(0,130);
+            }
+            theCanvas.stroke();
+            theCanvas.restore();
+        }
+        //获取时间
+        var date = new Date();
+        var seconds = date.getSeconds();
+        var hours=date.getHours()%12;
+        var minutes=date.getMinutes();
+        drawTime(seconds,1,"#777677",6,40,-120);
+        drawTime(minutes,8,"#f4b662",6,0,-110);
+        drawTime(hours,8,"#eb6d4e",30,0,-50);
+        //表心
+        theCanvas.beginPath();
+        theCanvas.fillStyle="#ba4b20";
+        theCanvas.lineWidth=1;
+        theCanvas.moveTo(300,300);
+        theCanvas.arc(300,300,10,0,360*Math.PI/180,false);
+        theCanvas.fill();
+        theCanvas.stroke();
+    }
+//    显示时间
+function drawTime(timenumber,width,color,deg,start,end) {
+    theCanvas.save();
+    theCanvas.beginPath();
+    theCanvas.lineWidth=width;
+    theCanvas.strokeStyle=color;
+    theCanvas.lineCap="round";
+    theCanvas.translate(300,300);
+    theCanvas.rotate(timenumber * deg * Math.PI / 180);
+    theCanvas.moveTo(0,start);
+    theCanvas.lineTo(0,end);
+    theCanvas.stroke();
+    theCanvas.restore();
+}
+function drawRing(i) {
+    theCanvas.save();
+    theCanvas.beginPath();
+    theCanvas.lineWidth=10;
+    theCanvas.strokeStyle="black";
+    theCanvas.translate(300,300);
+    theCanvas.rotate(i*5*Math.PI/180);
+    theCanvas.moveTo(0,0);
+    theCanvas.lineTo(0,-180);
+    theCanvas.stroke();
+    theCanvas.beginPath();
+    theCanvas.arc(0,-180,10,0,360*Math.PI/180,false);
+    theCanvas.stroke();
+    theCanvas.restore();
+}
+//    清空
+function clearClock(){
+    theCanvas.clearRect(0,0,600,600);
+}
+</script>
+</body>
+</html>
